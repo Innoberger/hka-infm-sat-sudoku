@@ -1,7 +1,7 @@
 .DS_Store
 .idea
 
-#Cmake
+# CMake
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
@@ -14,6 +14,9 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+# Executable file
+hka_infm_sat_sudoku
 
 # Prerequisites
 *.d
