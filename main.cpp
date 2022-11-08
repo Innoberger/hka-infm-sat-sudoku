@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <math.h>
 
 /*
  * Overloads the << operator to be able to be used with std::list<unsigned int>.
@@ -12,21 +13,67 @@ std::ostream &operator<<(std::ostream &os, const std::list<unsigned int> &list) 
 }
 
 /*
- * Returns the AtMostOne clause sat variable indices for each column.
+ * Returns the bit sequence of a decimal number as std::string.
  */
-std::list<std::list<unsigned int>> at_most_one_col_indices() {
+std::string dec_to_bin(unsigned int num) {
+    std::string result;
+    while (num != 0) {
+        if (num % 2)
+            result.append(1, '1');
+        else
+            result.append(1, '0');
+        num /= 2;
+    }
+    std::reverse(result.begin(), result.end());
+    return result;
+}
+
+/*
+ * Returns the decimal number of a bit sequence.
+ */
+unsigned int bin_to_dec(std::string num) {
+    return std::stoi(num, 0, 2);
+}
+
+/*
+ * Returns a string filled up with chars.
+ */
+std::string pad_left(std::string source, unsigned int totalWidth, char paddingChar = ' ') {
+    if (totalWidth > source.size())
+        source.insert(0, totalWidth - source.size(), paddingChar);
+
+    return source;
+}
+
+/*
+ * Returns the binary encoded number, column and row as a single integer.
+ */
+unsigned int encode(unsigned int n, unsigned int i, unsigned int j, unsigned int bits) {
+    std::string num_binary = pad_left(dec_to_bin(n), bits, '0');
+    std::string col_binary = pad_left(dec_to_bin(i), bits, '0');
+    std::string row_binary = pad_left(dec_to_bin(j), bits, '0');
+
+    std::string combined_binary = num_binary.append(col_binary).append(row_binary);
+
+    return bin_to_dec(combined_binary);
+}
+
+/*
+ * Returns the indices for each column.
+ */
+std::list<std::list<unsigned int>> col_indices(unsigned int order) {
     std::list<std::list<unsigned int>> at_most_one_indices;
+    unsigned int dimension = order * order;
+    unsigned int bits = ceil(log2(dimension));
 
     // iterate over each number
-    for (unsigned int n = 1; n <= 9; n++) {
+    for (unsigned int n = 1; n <= dimension; n++) {
         // iterate over each column
-        for (unsigned int i = 0; i < 9; i++) {
+        for (unsigned int i = 0; i < dimension; i++) {
             std::list<unsigned int> column_clauses;
             // iterate over each row
-            for (unsigned int j = 0; j < 9; j++) {
-                // construct the index for sat variable
-                unsigned int var_index = n * 100 + i * 10 + j;
-                column_clauses.push_back(var_index);
+            for (unsigned int j = 0; j < dimension; j++) {
+                column_clauses.push_back(encode(n, i, j, bits));
             }
             at_most_one_indices.push_back(column_clauses);
         }
@@ -36,21 +83,21 @@ std::list<std::list<unsigned int>> at_most_one_col_indices() {
 }
 
 /*
- * Returns the AtMostOne clause sat variable indices for each row.
+ * Returns the indices for each row.
  */
-std::list<std::list<unsigned int>> at_most_one_row_indices() {
+std::list<std::list<unsigned int>> row_indices(unsigned int order) {
     std::list<std::list<unsigned int>> at_most_one_indices;
+    unsigned int dimension = order * order;
+    unsigned int bits = ceil(log2(dimension));
 
     // iterate over each number
-    for (unsigned int n = 1; n <= 9; n++) {
+    for (unsigned int n = 1; n <= dimension; n++) {
         // iterate over each row
-        for (unsigned int j = 0; j < 9; j++) {
+        for (unsigned int j = 0; j < dimension; j++) {
             std::list<unsigned int> row_clauses;
             // iterate over each column
-            for (unsigned int i = 0; i < 9; i++) {
-                // construct the index for sat variable
-                unsigned int var_index = n * 100 + i * 10 + j;
-                row_clauses.push_back(var_index);
+            for (unsigned int i = 0; i < dimension; i++) {
+                row_clauses.push_back(encode(n, i, j, bits));
             }
             at_most_one_indices.push_back(row_clauses);
         }
@@ -60,27 +107,28 @@ std::list<std::list<unsigned int>> at_most_one_row_indices() {
 }
 
 /*
- * Returns the AtMostOne clause sat variable indices for each block.
+ * Returns the indices for each block.
  */
-std::list<std::list<unsigned int>> at_most_one_block_indices() {
+std::list<std::list<unsigned int>> block_indices(unsigned int order) {
     std::list<std::list<unsigned int>> at_most_one_indices;
+    unsigned int dimension = order * order;
+    unsigned int bits = ceil(log2(dimension));
 
     // iterate over each number
-    for (unsigned int n = 1; n <= 9; n++) {
+    for (unsigned int n = 1; n <= dimension; n++) {
         // iterate over each block column
-        for (unsigned int a = 0; a < 3; a++) {
+        for (unsigned int a = 0; a < order; a++) {
             // iterate over each block row
-            for (unsigned int b = 0; b < 3; b++) {
+            for (unsigned int b = 0; b < order; b++) {
                 std::list<unsigned int> block_clauses;
                 // iterate over each column in a block
-                for (unsigned int col_i = 0; col_i < 3; col_i++) {
+                for (unsigned int col_i = 0; col_i < order; col_i++) {
                     // iterate over each row in a block
-                    for (unsigned int row_j = 0; row_j < 3; row_j++) {
+                    for (unsigned int row_j = 0; row_j < order; row_j++) {
                         // construct the index for sat variable
-                        unsigned int col_offset = a * 3;
-                        unsigned int row_offset = b * 3;
-                        unsigned int var_index = n * 100 + (col_i + col_offset) * 10 + (row_j + row_offset);
-                        block_clauses.push_back(var_index);
+                        unsigned int col_offset = a * order;
+                        unsigned int row_offset = b * order;
+                        block_clauses.push_back(encode(n, col_i + col_offset, row_j + row_offset, bits));
                     }
                 }
                 at_most_one_indices.push_back(block_clauses);
@@ -92,7 +140,8 @@ std::list<std::list<unsigned int>> at_most_one_block_indices() {
 }
 
 int main() {
-    std::list<std::list<unsigned int>> list = at_most_one_block_indices();
+    unsigned int sudoku_order = 3;
+    std::list<std::list<unsigned int>> list = col_indices(sudoku_order);
     std::cout << list.front();
     std::cout << "---" << std::endl;
     std::cout << list.back();
