@@ -2,6 +2,10 @@
 #include <list>
 #include <math.h>
 
+struct encoding {
+    unsigned int number, column, row;
+};
+
 /*
  * Overloads the << operator to be able to be used with std::list<unsigned int>.
  */
@@ -56,6 +60,23 @@ unsigned int encode(unsigned int n, unsigned int i, unsigned int j, unsigned int
     std::string combined_binary = num_binary.append(col_binary).append(row_binary);
 
     return bin_to_dec(combined_binary);
+}
+
+/*
+ * Returns the decoded number, column and row of an encoded variable index.
+ */
+encoding decode(unsigned int encoded, unsigned int order) {
+    unsigned int dimension = order * order;
+    unsigned int bits = ceil(log2(dimension));
+    encoding enc;
+
+    std::string encoded_binary = pad_left(dec_to_bin(encoded), 3 * bits, '0');
+
+    enc.number = bin_to_dec(encoded_binary.substr(0, bits));
+    enc.column = bin_to_dec(encoded_binary.substr(bits, bits));
+    enc.row = bin_to_dec(encoded_binary.substr(bits * 2, bits));
+
+    return enc;
 }
 
 /*
@@ -145,5 +166,6 @@ int main() {
     std::cout << list.front();
     std::cout << "---" << std::endl;
     std::cout << list.back();
+    std::cout << decode(2440, sudoku_order).number << std::endl;
     return 0;
 }
