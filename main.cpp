@@ -1,9 +1,14 @@
 #include <iostream>
 #include <list>
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+/*
+ * Overloads the << operator to be able to be used with std::list<int>.
+ */
+std::ostream &operator<<(std::ostream &os, const std::list<int> &list) {
+    for (auto const &i: list) {
+        os << i << std::endl;
+    }
+    return os;
 }
 
 /*
@@ -26,6 +31,8 @@ std::list<std::list<int>> at_most_one_col_indices() {
         }
         at_most_one_indices.push_back(column_clauses);
     }
+
+    return at_most_one_indices;
 }
 
 /*
@@ -48,6 +55,8 @@ std::list<std::list<int>> at_most_one_row_indices() {
         }
         at_most_one_indices.push_back(row_clauses);
     }
+
+    return at_most_one_indices;
 }
 
 /*
@@ -78,4 +87,12 @@ std::list<std::list<int>> at_most_one_block_indices() {
             at_most_one_indices.push_back(block_clauses);
         }
     }
+
+    return at_most_one_indices;
+}
+
+int main() {
+    std::list<std::list<int>> list = at_most_one_col_indices();
+    std::cout << list.front();
+    return 0;
 }
