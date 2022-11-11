@@ -63,13 +63,16 @@ int init_field() {
             }
 
             // only prefill the start field if the input element is not 0
-            if (elem == 0)
+            if (elem == 0) {
+                col_ctr++;
+                columns.pop_front();
                 continue;
+            }
 
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
             for (unsigned int n = 0; n <= dimension; n++) {
-                sudoku_input_assignment_clauses.push_back({ pair<unsigned int, bool>(encode(n, col_ctr, lne_ctr, ceil(log2(dimension))), ((unsigned int) elem) == n) });
+                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, ceil(log2(dimension))), ((unsigned int) elem) == n }});
             }
 
             col_ctr++;
@@ -95,13 +98,24 @@ list<map<unsigned int, bool>> at_least_one_constraints(list<list<unsigned int>> 
         map<unsigned int, bool> at_least_one;
 
         while (!elems.empty()) {
-            at_least_one.insert(pair<unsigned int, bool>(elems.back(), true));
+            at_least_one.insert({ elems.back(), true });
             elems.pop_back();
         }
 
         constraints.push_back(at_least_one);
         indices.pop_back();
     }
+
+    return constraints;
+}
+
+/*
+ * Generates at AtMostOne constraints.
+ */
+list<map<unsigned int, bool>> at_most_one_constraints(list<list<unsigned int>> indices) {
+    list<map<unsigned int, bool>> constraints;
+
+    // TODO: generate constraints here
 
     return constraints;
 }
@@ -121,4 +135,9 @@ int main() {
     clauses.merge(at_least_one_constraints(cols));
     clauses.merge(at_least_one_constraints(rows));
     clauses.merge(at_least_one_constraints(blocks));
+
+    clauses.merge(at_most_one_constraints(cols));
+    clauses.merge(at_most_one_constraints(rows));
+    clauses.merge(at_most_one_constraints(blocks));
+    return 0;
 }
