@@ -1,6 +1,6 @@
 #include <iostream>
 #include <list>
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
@@ -19,7 +19,7 @@ ostream &operator<<(ostream &os, const list<unsigned int> &list) {
 }
 
 /*
- * Returns the bit sequence of a decimal number as string.
+ * Returns the bit sequence of a decimal number as a string.
  */
 string dec_to_bin(unsigned int num) {
     string result;
@@ -37,8 +37,8 @@ string dec_to_bin(unsigned int num) {
 /*
  * Returns the decimal number of a bit sequence.
  */
-unsigned int bin_to_dec(string num) {
-    return stoi(num, 0, 2);
+unsigned int bin_to_dec(const string& num) {
+    return stoi(num, nullptr, 2);
 }
 
 /*
@@ -70,7 +70,7 @@ unsigned int encode(unsigned int n, unsigned int i, unsigned int j, unsigned int
 encoding decode(unsigned int encoded, unsigned int order) {
     unsigned int dimension = order * order;
     unsigned int bits = ceil(log2(dimension));
-    encoding enc;
+    encoding enc{};
 
     string encoded_binary = pad_left(dec_to_bin(encoded), 3 * bits, '0');
 
