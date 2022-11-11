@@ -1,8 +1,11 @@
+#include <map>
 #include "utils.h"
 #include "indices.h"
 
+map<unsigned int, bool> sudoku_field;
+
 int main() {
-    int sudoku_order, order_squared;
+    int sudoku_order, dimension;
     list<string> lines;
 
     for (string line; getline(cin, line);)
@@ -14,7 +17,7 @@ int main() {
     }
 
     sudoku_order = stoi(lines.front());
-    order_squared = sudoku_order * sudoku_order;
+    dimension = sudoku_order * sudoku_order;
     lines.pop_front();
 
     if (sudoku_order < 1) {
@@ -23,9 +26,9 @@ int main() {
         return 1;
     }
 
-    if (lines.size() != order_squared) {
+    if (lines.size() != dimension) {
         cout << "error reading from stdin: after order number line ("
-            << sudoku_order << "), there are order * order (" << order_squared
+            << sudoku_order << "), there are order * order (" << dimension
             << ") lines expected, got " << lines.size() << endl;
         return 1;
     }
@@ -35,9 +38,9 @@ int main() {
     while (!lines.empty()) {
         list<string> columns = tokenize(lines.front(), ' ');
 
-        if (columns.size() != order_squared) {
+        if (columns.size() != dimension) {
             cout << "error reading from stdin: error in line "
-                << (lne_ctr + 2) << ": expected " << order_squared
+                << (lne_ctr + 2) << ": expected " << dimension
                 << " columns separated by whitespace, got " << columns.size() << endl;
             return 1;
         }
@@ -47,18 +50,23 @@ int main() {
         while (!columns.empty()) {
             int elem = stoi(columns.front());
 
-            if (elem < 0 || elem > order_squared) {
+            if (elem < 0 || elem > dimension) {
                 cout << "error reading from stdin: error in line "
                     << (lne_ctr + 2) << ", column " << col_ctr
-                    << ": expected integer between 0 and " << order_squared
+                    << ": expected integer between 0 and " << dimension
                     << ", got " << elem << endl;
                 return 1;
             }
 
-            /**
-             * TODO:
-             * assignment of bolean variables for SAT solving goes HERE
-             */
+            // only prefill the start field if the input element is not 0
+            if (elem == 0)
+                continue;
+
+            // set the all (column, row) variables for that number to false,
+            // except for the number that was read from input (is true by definition)
+            for (unsigned int n = 0; n <= dimension; n++) {
+                sudoku_field.insert(pair<unsigned int, bool>(encode(n, col_ctr, lne_ctr, ceil(log2(dimension))), ((unsigned int) elem) == n));
+            }
 
             col_ctr++;
             columns.pop_front();
