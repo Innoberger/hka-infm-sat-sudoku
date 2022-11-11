@@ -56,6 +56,13 @@ unsigned int encode(unsigned int n, unsigned int i, unsigned int j, unsigned int
 }
 
 /*
+ * Returns the binary encoded number, column and row (derived from the struct encoding) as a single integer.
+ */
+unsigned int encode(encoding enc, unsigned int bits) {
+    return encode(enc.number, enc.column, enc.row, bits);
+}
+
+/*
  * Returns the decoded number, column and row of an encoded variable index.
  */
 encoding decode(unsigned int encoded, unsigned int order) {
