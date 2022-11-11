@@ -27,6 +27,9 @@ ostream &operator<<(ostream &os, const list<string> &list) {
     return os;
 }
 
+/*
+ * Tokenizes a string into a list<string> by splitting at a delimiter.
+ */
 list<string> tokenize(string const &str, const char delim) {
     size_t start;
     size_t end = 0;
