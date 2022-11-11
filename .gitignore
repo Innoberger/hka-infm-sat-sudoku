@@ -1,5 +1,6 @@
 # Generated
 formula.txt
+*.col
 
 # Environment
 .DS_Store

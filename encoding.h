@@ -94,3 +94,25 @@ void print_formula(list<map<unsigned int, bool>> clauses, unsigned int order) {
         cout << " }" << endl;
     }
 }
+
+/*
+ * Prints the formula in a DIMACS format.
+ */
+void print_dimacs(list<map<unsigned int, bool>> clauses, unsigned int order) {
+    cout << "c" << endl;
+    cout << "c DIMACS file to solve a Sudoku game with SAT" << endl;
+    cout << "c" << endl;
+    cout << "p cnf " << (order * order * order * order * order * order) << " " << clauses.size() << endl;
+
+    for (auto const &clause: clauses) {
+        for (auto const &literal: clause) {
+            int var = literal.first;
+
+            if (literal.second)
+                var *= -1;
+
+            cout << var << " ";
+        }
+        cout << "0" << endl;
+    }
+}

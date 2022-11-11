@@ -72,7 +72,7 @@ int init_field() {
 
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
-            for (unsigned int n = 0; n <= dimension; n++) {
+            for (unsigned int n = 1; n <= dimension; n++) {
                 sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, ceil(log2(dimension))), ((unsigned int) elem) == n }});
             }
 
@@ -152,7 +152,6 @@ int main() {
     clauses.merge(at_most_one_constraints(rows));
     clauses.merge(at_most_one_constraints(blocks));
 
-    print_formula(clauses, order);
-
+    print_dimacs(clauses, order);
     return 0;
 }
