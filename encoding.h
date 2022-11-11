@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 struct encoding {
     unsigned int number, column, row;
 };
@@ -77,4 +79,18 @@ encoding decode(unsigned int encoded, unsigned int order) {
     enc.row = bin_to_dec(encoded_binary.substr(bits * 2, bits));
 
     return enc;
+}
+
+/*
+ * Prints the formula in a human-readable format.
+ */
+void print_formula(list<map<unsigned int, bool>> clauses, unsigned int order) {
+    for (auto const &clause: clauses) {
+        cout << "{";
+        for (auto const &literal: clause) {
+            encoding enc = decode(literal.first, order);
+            cout << " (num:" << enc.number << ", col:" << enc.column << ", row:" << enc.row << ") = " << literal.second;
+        }
+        cout << " }" << endl;
+    }
 }

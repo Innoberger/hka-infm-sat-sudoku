@@ -151,5 +151,8 @@ int main() {
     clauses.merge(at_most_one_constraints(cols));
     clauses.merge(at_most_one_constraints(rows));
     clauses.merge(at_most_one_constraints(blocks));
+
+    print_formula(sudoku_input_assignment_clauses, order);
+
     return 0;
 }
