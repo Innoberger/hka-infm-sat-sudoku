@@ -16,3 +16,13 @@ ostream &operator<<(ostream &os, const list<unsigned int> &list) {
     }
     return os;
 }
+
+/*
+ * Overloads the << operator to be able to be used with list<string>.
+ */
+ostream &operator<<(ostream &os, const list<string> &list) {
+    for (auto const &i: list) {
+        os << i << endl;
+    }
+    return os;
+}
