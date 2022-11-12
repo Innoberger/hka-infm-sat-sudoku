@@ -7,6 +7,29 @@
 #include "encoding.h"
 
 /*
+ * Returns the indices for each field.
+ */
+list<list<unsigned int>> field_indices(unsigned int order) {
+    list<list<unsigned int>> indices;
+    unsigned int dimension = order * order;
+
+    // iterate over each column
+    for (unsigned int i = 0; i < dimension; i++) {
+        // iterate over each row
+        for (unsigned int j = 0; j < dimension; j++) {
+            list<unsigned int> field_clauses;
+            // iterate over each number
+            for (unsigned int n = 1; n <= dimension; n++) {
+                field_clauses.push_back(encode(n, i, j, order));
+            }
+            indices.push_back(field_clauses);
+        }
+    }
+
+    return indices;
+}
+
+/*
  * Returns the indices for each column.
  */
 list<list<unsigned int>> col_indices(unsigned int order) {

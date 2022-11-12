@@ -1,10 +1,12 @@
 #include <map>
 #include <vector>
+#include <cmath>
 #include "utils.h"
 #include "indices.h"
 #include "constraints.h"
 
 list<map<unsigned int, bool>> sudoku_input_assignment_clauses;
+map<unsigned int, bool> sudoku_solution;
 unsigned int order;
 
 /*
@@ -18,7 +20,7 @@ int init_field() {
         lines.push_back(line);
 
     if (lines.size() < 2) {
-        cout << "error reading from stdin: expected at least 2 lines" << endl;
+        cout << "error reading from stdin: expected at least 2 lines, got " << lines.size() << endl;
         return 1;
     }
 
@@ -90,6 +92,70 @@ int init_field() {
 }
 
 /*
+ * Loads the solution from any SAT solver that outputs DIMACS format in stdout.
+ */
+int load_solution() {
+    list<string> lines;
+
+    for (string line; getline(cin, line);)
+        lines.push_back(line);
+
+    if (lines.size() < 2) {
+        cout << "error reading from stdin: expected at least 2 lines, got " << lines.size() << endl;
+        return 1;
+    }
+
+    unsigned int lne_ctr = 1;
+
+    while (!lines.empty()) {
+        list<string> columns_list = tokenize(lines.front(), ' ');
+        vector<string> columns_vector { begin(columns_list), end(columns_list) };
+
+        if (columns_vector.at(0) == "s") {
+            if (columns_vector.at(1) == "SATISFIABLE") {
+                lne_ctr++;
+                lines.pop_front();
+                continue;
+            } else if (columns_vector.at(1) == "UNSATISFIABLE") {
+                cout << "sudoku is not satisfiable / solvable" << endl;
+                return 1;
+            } else {
+                cout << "invalid satisfiability state '" << columns_vector.at(1) << "' in line " << lne_ctr << endl;
+                return 1;
+            }
+        }
+
+        if (columns_vector.at(0) != "v") {
+            lne_ctr++;
+            lines.pop_front();
+            continue;
+        }
+
+        for (int i = 1; i < columns_vector.size(); i++) {
+            int literal = stoi(columns_vector.at(i));
+
+            if (literal == 0) {
+                int order_exp_6 = abs(stoi(columns_vector.at(i - 1)));
+                order = (unsigned int) round(pow(order_exp_6, (double) 1/6));
+                continue;
+            }
+
+            if (literal < 0) {
+                sudoku_solution.insert({ (unsigned int) abs(literal), false });
+                continue;
+            }
+
+            sudoku_solution.insert({ (unsigned int) literal, true });
+        }
+
+        lne_ctr++;
+        lines.pop_front();
+    }
+
+    return 0;
+}
+
+/*
  * On option '--generate-dimacs' / '-d'.
  * Reads a .sudoku file format from stdin and output corresponding dimacs to stdout.
  */
@@ -99,16 +165,19 @@ int program_generate_dimacs() {
     if (init != 0)
         return init;
 
+    list<list<unsigned int>> fields = field_indices(order);
     list<list<unsigned int>> cols = col_indices(order);
     list<list<unsigned int>> rows = row_indices(order);
     list<list<unsigned int>> blocks = block_indices(order);
 
     list<map<unsigned int, bool>> clauses = sudoku_input_assignment_clauses;
 
+    clauses.merge(at_least_one_constraints(fields));
     clauses.merge(at_least_one_constraints(cols));
     clauses.merge(at_least_one_constraints(rows));
     clauses.merge(at_least_one_constraints(blocks));
 
+    clauses.merge(at_most_one_constraints(fields));
     clauses.merge(at_most_one_constraints(cols));
     clauses.merge(at_most_one_constraints(rows));
     clauses.merge(at_most_one_constraints(blocks));
@@ -122,7 +191,12 @@ int program_generate_dimacs() {
  * Reads a solved sat problem from stdin and reinterprets it as .sudoku file format, writing to stdout.
  */
 int program_interpret_solution() {
-    cout << "not implemented yet" << endl;
+    int load = load_solution();
+
+    if (load != 0)
+        return load;
+
+    print_sudoku(sudoku_solution, order);
     return 0;
 }
 

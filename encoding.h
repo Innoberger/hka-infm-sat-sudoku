@@ -85,3 +85,30 @@ void print_dimacs(list<map<unsigned int, bool>> clauses, unsigned int order) {
         cout << "0" << endl;
     }
 }
+
+/*
+ * Prints the formula in a SUDOKU format.
+ */
+int print_sudoku(map<unsigned int, bool> solution, unsigned int order) {
+    unsigned int dimension = order * order;
+
+    cout << order << endl;
+
+    for (unsigned int row = 0; row < dimension; row++) {
+        for (unsigned col = 0; col < dimension; col++) {
+            for (unsigned num = 1; num <= dimension; num++) {
+                unsigned int encoded = encode(num, col, row, order);
+                bool value = solution.at(encoded);
+
+                if (value)
+                    cout << num;
+            }
+
+            if (col < dimension - 1)
+                cout << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
