@@ -29,3 +29,13 @@ There are two program argument options:
 |-----------------------------|--------------------------------------------------------------------------|
 | -d<br/>--generate-dimacs    | Read a .sudoku file from stdin and print DIMACS format to stdout.        |
 | -s<br/>--interpret-solution | Read solved DIMACS format form stdin and print .sudoku format to stdout. |
+
+## Benchmarking
+
+The code might not be the most efficient. To measure the duration, you can just use the `time` application like this:
+
+`time cat file.sudoku | ./hka_infm_sat_sudoku -d | cadical | ./hka_infm_sat_sudoku -s`
+
+This will output something like this:
+
+![Example Result](example.png)

@@ -1,6 +1,7 @@
 # Generated
 formula.txt
 *.col
+*.sudoku
 
 # Environment
 .DS_Store
