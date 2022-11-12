@@ -89,6 +89,10 @@ int init_field() {
     return 0;
 }
 
+/*
+ * On option '--generate-dimacs' / '-d'.
+ * Reads a .sudoku file format from stdin and output corresponding dimacs to stdout.
+ */
 int program_generate_dimacs() {
     int init = init_field();
 
@@ -113,6 +117,10 @@ int program_generate_dimacs() {
     return 0;
 }
 
+/*
+ * On option '--interpret-solution' / '-s'
+ * Reads a solved sat problem from stdin and reinterprets it as .sudoku file format, writing to stdout.
+ */
 int program_interpret_solution() {
     cout << "not implemented yet" << endl;
     return 0;
