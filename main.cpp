@@ -89,7 +89,7 @@ int init_field() {
     return 0;
 }
 
-int main() {
+int program_generate_dimacs() {
     int init = init_field();
 
     if (init != 0)
@@ -111,4 +111,24 @@ int main() {
 
     print_dimacs(clauses, order);
     return 0;
+}
+
+int program_interpret_solution() {
+    cout << "not implemented yet" << endl;
+    return 0;
+}
+
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        cout << "error reading program options: expected exactly one option, got " << (argc - 1) << endl;
+        return 1;
+    }
+
+    if (strcmp(argv[1], "--generate-dimacs") == 0 || strcmp(argv[1], "-d") == 0)
+        return program_generate_dimacs();
+    else if (strcmp(argv[1], "--interpret-solution") == 0 || strcmp(argv[1], "-s") == 0)
+        return program_interpret_solution();
+
+    cout << "error reading program options: unknown option '" << argv[1] << "'" << endl;
+    return 1;
 }
