@@ -10,7 +10,7 @@ Compile with `cmake CMakeLists.txt && make`. This will create an executable such
 ## Usage
 
 The application will read [.sudoku files](https://baldur.iti.kit.edu/sat/files/sudokus.zip) from stdin. To execute, run `cat file.sudoku | ./hka_infm_sat_sudoku -d`.
-This will print a DIMACS-formatted variable to stdout, which you can either redirect to a file or pipe to a SAT solving tool of your choice:
+This will print a DIMACS-formatted variable to stdout, which you can either redirect to a file or pipe to a SAT solving tool of your choice (such as [CaDiCaL](https://github.com/arminbiere/cadical)):
 
 `cat file.sudoku | ./hka_infm_sat_sudoku -d > sudoku_sat.col`
 
