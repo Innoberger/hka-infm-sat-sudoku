@@ -28,4 +28,4 @@ There are two program argument options:
 | Option                      | Description                                                              |
 |-----------------------------|--------------------------------------------------------------------------|
 | -d<br/>--generate-dimacs    | Read a .sudoku file from stdin and print DIMACS format to stdout.        |
-| -s<br/>--interpret-solution | Read solved DIAMCS format form stdin and print .sudoku format to stdout. |
+| -s<br/>--interpret-solution | Read solved DIMACS format form stdin and print .sudoku format to stdout. |
