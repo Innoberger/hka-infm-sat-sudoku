@@ -9,17 +9,17 @@
 /*
  * Returns the indices for each field.
  */
-list<list<unsigned int>> field_indices(unsigned int order) {
-    list<list<unsigned int>> indices;
-    unsigned int dimension = order * order;
+list<list<size_t>> field_indices(size_t order) {
+    list<list<size_t>> indices;
+    size_t dimension = order * order;
 
     // iterate over each column
-    for (unsigned int i = 0; i < dimension; i++) {
+    for (size_t i = 0; i < dimension; i++) {
         // iterate over each row
-        for (unsigned int j = 0; j < dimension; j++) {
-            list<unsigned int> field_clauses;
+        for (size_t j = 0; j < dimension; j++) {
+            list<size_t> field_clauses;
             // iterate over each number
-            for (unsigned int n = 1; n <= dimension; n++) {
+            for (size_t n = 1; n <= dimension; n++) {
                 field_clauses.push_back(encode(n, i, j, order));
             }
             indices.push_back(field_clauses);
@@ -32,17 +32,17 @@ list<list<unsigned int>> field_indices(unsigned int order) {
 /*
  * Returns the indices for each column.
  */
-list<list<unsigned int>> col_indices(unsigned int order) {
-    list<list<unsigned int>> indices;
-    unsigned int dimension = order * order;
+list<list<size_t>> col_indices(size_t order) {
+    list<list<size_t>> indices;
+    size_t dimension = order * order;
 
     // iterate over each number
-    for (unsigned int n = 1; n <= dimension; n++) {
+    for (size_t n = 1; n <= dimension; n++) {
         // iterate over each column
-        for (unsigned int i = 0; i < dimension; i++) {
-            list<unsigned int> column_clauses;
+        for (size_t i = 0; i < dimension; i++) {
+            list<size_t> column_clauses;
             // iterate over each row
-            for (unsigned int j = 0; j < dimension; j++) {
+            for (size_t j = 0; j < dimension; j++) {
                 column_clauses.push_back(encode(n, i, j, order));
             }
             indices.push_back(column_clauses);
@@ -55,17 +55,17 @@ list<list<unsigned int>> col_indices(unsigned int order) {
 /*
  * Returns the indices for each row.
  */
-list<list<unsigned int>> row_indices(unsigned int order) {
-    list<list<unsigned int>> indices;
-    unsigned int dimension = order * order;
+list<list<size_t>> row_indices(size_t order) {
+    list<list<size_t>> indices;
+    size_t dimension = order * order;
 
     // iterate over each number
-    for (unsigned int n = 1; n <= dimension; n++) {
+    for (size_t n = 1; n <= dimension; n++) {
         // iterate over each row
-        for (unsigned int j = 0; j < dimension; j++) {
-            list<unsigned int> row_clauses;
+        for (size_t j = 0; j < dimension; j++) {
+            list<size_t> row_clauses;
             // iterate over each column
-            for (unsigned int i = 0; i < dimension; i++) {
+            for (size_t i = 0; i < dimension; i++) {
                 row_clauses.push_back(encode(n, i, j, order));
             }
             indices.push_back(row_clauses);
@@ -77,24 +77,24 @@ list<list<unsigned int>> row_indices(unsigned int order) {
 /*
  * Returns the indices for each block.
  */
-list<list<unsigned int>> block_indices(unsigned int order) {
-    list<list<unsigned int>> indices;
-    unsigned int dimension = order * order;
+list<list<size_t>> block_indices(size_t order) {
+    list<list<size_t>> indices;
+    size_t dimension = order * order;
 
     // iterate over each number
-    for (unsigned int n = 1; n <= dimension; n++) {
+    for (size_t n = 1; n <= dimension; n++) {
         // iterate over each block column
-        for (unsigned int a = 0; a < order; a++) {
+        for (size_t a = 0; a < order; a++) {
             // iterate over each block row
-            for (unsigned int b = 0; b < order; b++) {
-                list<unsigned int> block_clauses;
+            for (size_t b = 0; b < order; b++) {
+                list<size_t> block_clauses;
                 // iterate over each column in a block
-                for (unsigned int col_i = 0; col_i < order; col_i++) {
+                for (size_t col_i = 0; col_i < order; col_i++) {
                     // iterate over each row in a block
-                    for (unsigned int row_j = 0; row_j < order; row_j++) {
+                    for (size_t row_j = 0; row_j < order; row_j++) {
                         // construct the index for sat variable
-                        unsigned int col_offset = a * order;
-                        unsigned int row_offset = b * order;
+                        size_t col_offset = a * order;
+                        size_t row_offset = b * order;
                         block_clauses.push_back(encode(n, col_i + col_offset, row_j + row_offset, order));
                     }
                 }

@@ -8,29 +8,29 @@
 using namespace std;
 
 struct encoding {
-    unsigned int number, column, row;
+    size_t number, column, row;
 };
 
 /*
  * Returns the encoded number, column and row as a single integer.
  */
-unsigned int encode(unsigned int num, unsigned int col, unsigned int row, unsigned int order) {
-    unsigned int dimension = order * order;
+size_t encode(size_t num, size_t col, size_t row, size_t order) {
+    size_t dimension = order * order;
     return ((col + row * dimension) * dimension) + num;
 }
 
 /*
  * Returns the encoded number, column and row (derived from the struct encoding) as a single integer.
  */
-unsigned int encode(encoding enc, unsigned int order) {
+size_t encode(encoding enc, size_t order) {
     return encode(enc.number, enc.column, enc.row, order);
 }
 
 /*
  * Returns the decoded number, column and row of an encoded variable index.
  */
-encoding decode(unsigned int encoded, unsigned int order) {
-    unsigned int dimension = order * order;
+encoding decode(size_t encoded, size_t order) {
+    size_t dimension = order * order;
     encoding enc{};
 
     for (int i = 0; i < dimension; i++) {
@@ -53,7 +53,7 @@ encoding decode(unsigned int encoded, unsigned int order) {
 /*
  * Prints the formula in a human-readable format.
  */
-void print_formula(list<map<unsigned int, bool>> clauses, unsigned int order) {
+void print_formula(list<map<size_t, bool>> clauses, size_t order) {
     for (auto const &clause: clauses) {
         cout << "{";
         for (auto const &literal: clause) {
@@ -67,7 +67,7 @@ void print_formula(list<map<unsigned int, bool>> clauses, unsigned int order) {
 /*
  * Prints the formula in a DIMACS format.
  */
-void print_dimacs(list<map<unsigned int, bool>> clauses, unsigned int order) {
+void print_dimacs(list<map<size_t, bool>> clauses, size_t order) {
     cout << "c" << endl;
     cout << "c DIMACS file to solve a Sudoku game with SAT" << endl;
     cout << "c" << endl;
@@ -89,15 +89,15 @@ void print_dimacs(list<map<unsigned int, bool>> clauses, unsigned int order) {
 /*
  * Prints the formula in a SUDOKU format.
  */
-int print_sudoku(map<unsigned int, bool> solution, unsigned int order) {
-    unsigned int dimension = order * order;
+int print_sudoku(map<size_t, bool> solution, size_t order) {
+    size_t dimension = order * order;
 
     cout << order << endl;
 
-    for (unsigned int row = 0; row < dimension; row++) {
+    for (size_t row = 0; row < dimension; row++) {
         for (unsigned col = 0; col < dimension; col++) {
             for (unsigned num = 1; num <= dimension; num++) {
-                unsigned int encoded = encode(num, col, row, order);
+                size_t encoded = encode(num, col, row, order);
                 bool value = solution.at(encoded);
 
                 if (value)

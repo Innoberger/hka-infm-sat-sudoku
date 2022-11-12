@@ -5,9 +5,9 @@
 #include "indices.h"
 #include "constraints.h"
 
-list<map<unsigned int, bool>> sudoku_input_assignment_clauses;
-map<unsigned int, bool> sudoku_solution;
-unsigned int order;
+list<map<size_t, bool>> sudoku_input_assignment_clauses;
+map<size_t, bool> sudoku_solution;
+size_t order;
 
 /*
  * Initializes the variable sudoku_input_assignment_clauses.
@@ -41,7 +41,7 @@ int init_field() {
         return 1;
     }
 
-    unsigned int lne_ctr = 0;
+    size_t lne_ctr = 0;
 
     while (!lines.empty()) {
         list<string> columns = tokenize(lines.front(), ' ');
@@ -53,7 +53,7 @@ int init_field() {
             return 1;
         }
 
-        unsigned int col_ctr = 0;
+        size_t col_ctr = 0;
 
         while (!columns.empty()) {
             int elem = stoi(columns.front());
@@ -75,8 +75,8 @@ int init_field() {
 
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
-            for (unsigned int n = 1; n <= dimension; n++) {
-                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, sudoku_order), ((unsigned int) elem) == n }});
+            for (size_t n = 1; n <= dimension; n++) {
+                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, sudoku_order), ((size_t) elem) == n }});
             }
 
             col_ctr++;
@@ -87,7 +87,7 @@ int init_field() {
         lines.pop_front();
     }
 
-    order = (unsigned int) sudoku_order;
+    order = (size_t) sudoku_order;
     return 0;
 }
 
@@ -105,7 +105,7 @@ int load_solution() {
         return 1;
     }
 
-    unsigned int lne_ctr = 1;
+    size_t lne_ctr = 1;
 
     while (!lines.empty()) {
         list<string> columns_list = tokenize(lines.front(), ' ');
@@ -131,27 +131,25 @@ int load_solution() {
             continue;
         }
 
-        for (int i = 1; i < columns_vector.size(); i++) {
+        for (size_t i = 1; i < columns_vector.size(); i++) {
             int literal = stoi(columns_vector.at(i));
 
-            if (literal == 0) {
-                int order_exp_6 = abs(stoi(columns_vector.at(i - 1)));
-                order = (unsigned int) round(pow(order_exp_6, (double) 1/6));
-                continue;
-            }
+            if (literal == 0)
+                break;
 
             if (literal < 0) {
-                sudoku_solution.insert({ (unsigned int) abs(literal), false });
+                sudoku_solution.insert({ (size_t) abs(literal), false });
                 continue;
             }
 
-            sudoku_solution.insert({ (unsigned int) literal, true });
+            sudoku_solution.insert({ (size_t) literal, true });
         }
 
         lne_ctr++;
         lines.pop_front();
     }
 
+    order = (size_t) round(pow(sudoku_solution.size(), (double) 1/6));
     return 0;
 }
 
@@ -165,12 +163,12 @@ int program_generate_dimacs() {
     if (init != 0)
         return init;
 
-    list<list<unsigned int>> fields = field_indices(order);
-    list<list<unsigned int>> cols = col_indices(order);
-    list<list<unsigned int>> rows = row_indices(order);
-    list<list<unsigned int>> blocks = block_indices(order);
+    list<list<size_t>> fields = field_indices(order);
+    list<list<size_t>> cols = col_indices(order);
+    list<list<size_t>> rows = row_indices(order);
+    list<list<size_t>> blocks = block_indices(order);
 
-    list<map<unsigned int, bool>> clauses = sudoku_input_assignment_clauses;
+    list<map<size_t, bool>> clauses = sudoku_input_assignment_clauses;
 
     clauses.merge(at_least_one_constraints(fields));
     clauses.merge(at_least_one_constraints(cols));
