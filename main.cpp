@@ -74,7 +74,7 @@ int init_field() {
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
             for (unsigned int n = 1; n <= dimension; n++) {
-                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, ceil(log2(dimension))), ((unsigned int) elem) == n }});
+                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, sudoku_order), ((unsigned int) elem) == n }});
             }
 
             col_ctr++;

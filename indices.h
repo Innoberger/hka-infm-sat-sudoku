@@ -4,7 +4,6 @@
  */
 
 #include <list>
-#include <cmath>
 #include "encoding.h"
 
 /*
@@ -13,7 +12,6 @@
 list<list<unsigned int>> col_indices(unsigned int order) {
     list<list<unsigned int>> indices;
     unsigned int dimension = order * order;
-    unsigned int bits = ceil(log2(dimension));
 
     // iterate over each number
     for (unsigned int n = 1; n <= dimension; n++) {
@@ -22,7 +20,7 @@ list<list<unsigned int>> col_indices(unsigned int order) {
             list<unsigned int> column_clauses;
             // iterate over each row
             for (unsigned int j = 0; j < dimension; j++) {
-                column_clauses.push_back(encode(n, i, j, bits));
+                column_clauses.push_back(encode(n, i, j, order));
             }
             indices.push_back(column_clauses);
         }
@@ -37,7 +35,6 @@ list<list<unsigned int>> col_indices(unsigned int order) {
 list<list<unsigned int>> row_indices(unsigned int order) {
     list<list<unsigned int>> indices;
     unsigned int dimension = order * order;
-    unsigned int bits = ceil(log2(dimension));
 
     // iterate over each number
     for (unsigned int n = 1; n <= dimension; n++) {
@@ -46,7 +43,7 @@ list<list<unsigned int>> row_indices(unsigned int order) {
             list<unsigned int> row_clauses;
             // iterate over each column
             for (unsigned int i = 0; i < dimension; i++) {
-                row_clauses.push_back(encode(n, i, j, bits));
+                row_clauses.push_back(encode(n, i, j, order));
             }
             indices.push_back(row_clauses);
         }
@@ -60,7 +57,6 @@ list<list<unsigned int>> row_indices(unsigned int order) {
 list<list<unsigned int>> block_indices(unsigned int order) {
     list<list<unsigned int>> indices;
     unsigned int dimension = order * order;
-    unsigned int bits = ceil(log2(dimension));
 
     // iterate over each number
     for (unsigned int n = 1; n <= dimension; n++) {
@@ -76,7 +72,7 @@ list<list<unsigned int>> block_indices(unsigned int order) {
                         // construct the index for sat variable
                         unsigned int col_offset = a * order;
                         unsigned int row_offset = b * order;
-                        block_clauses.push_back(encode(n, col_i + col_offset, row_j + row_offset, bits));
+                        block_clauses.push_back(encode(n, col_i + col_offset, row_j + row_offset, order));
                     }
                 }
                 indices.push_back(block_clauses);
