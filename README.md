@@ -25,10 +25,10 @@ As a one-liner, use:
 
 There are two program argument options:
 
-| Option                      | Description                                                              |
-|-----------------------------|--------------------------------------------------------------------------|
-| -d<br/>--generate-dimacs    | Read a .sudoku file from stdin and print DIMACS format to stdout.        |
-| -s<br/>--interpret-solution | Read solved DIMACS format form stdin and print .sudoku format to stdout. |
+| Option                             | Description                                                              |
+|------------------------------------|--------------------------------------------------------------------------|
+| `-d` or<br/>`--generate-dimacs`    | Read a .sudoku file from stdin and print DIMACS format to stdout.        |
+| `-s` or<br/>`--interpret-solution` | Read solved DIMACS format from stdin and print .sudoku format to stdout. |
 
 ## Benchmarking
 
