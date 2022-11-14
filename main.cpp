@@ -5,12 +5,10 @@
 #include "indices.h"
 #include "constraints.h"
 
-list<map<size_t, bool>> sudoku_input_assignment_clauses;
-
 /*
  * Initializes the variable sudoku_input_assignment_clauses.
  */
-int init_field(size_t& order) {
+int init_field(size_t& order, list<map<size_t, bool>>& sudoku_input_assignment_clauses) {
     size_t dimension;
     list<string> lines;
 
@@ -157,7 +155,8 @@ int load_solution(size_t& order, map<size_t, bool>& solution) {
  */
 int program_generate_dimacs() {
     size_t order;
-    int init = init_field(order);
+    list<map<size_t, bool>> clauses;
+    int init = init_field(order, clauses);
 
     if (init != 0)
         return init;
@@ -166,8 +165,6 @@ int program_generate_dimacs() {
     list<list<size_t>> cols = col_indices(order);
     list<list<size_t>> rows = row_indices(order);
     list<list<size_t>> blocks = block_indices(order);
-
-    list<map<size_t, bool>> clauses = sudoku_input_assignment_clauses;
 
     clauses.merge(at_least_one_constraints(fields));
     clauses.merge(at_least_one_constraints(cols));
