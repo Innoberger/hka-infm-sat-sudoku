@@ -14,7 +14,7 @@ struct encoding {
 /*
  * Returns the encoded number, column and row as a single integer.
  */
-size_t encode(size_t num, size_t col, size_t row, size_t order) {
+size_t encode(size_t num, size_t col, size_t row, size_t& order) {
     size_t dimension = order * order;
     return ((col + row * dimension) * dimension) + num;
 }
@@ -22,14 +22,14 @@ size_t encode(size_t num, size_t col, size_t row, size_t order) {
 /*
  * Returns the encoded number, column and row (derived from the struct encoding) as a single integer.
  */
-size_t encode(encoding enc, size_t order) {
+size_t encode(encoding enc, size_t& order) {
     return encode(enc.number, enc.column, enc.row, order);
 }
 
 /*
  * Returns the decoded number, column and row of an encoded variable index.
  */
-encoding decode(size_t encoded, size_t order) {
+encoding decode(size_t encoded, size_t& order) {
     size_t dimension = order * order;
     encoding enc{};
 
@@ -53,7 +53,7 @@ encoding decode(size_t encoded, size_t order) {
 /*
  * Prints the formula in a human-readable format.
  */
-void print_formula(list<map<size_t, bool>> clauses, size_t order) {
+void print_formula(list<map<size_t, bool>> clauses, size_t& order) {
     for (auto const &clause: clauses) {
         cout << "{";
         for (auto const &literal: clause) {
@@ -67,7 +67,7 @@ void print_formula(list<map<size_t, bool>> clauses, size_t order) {
 /*
  * Prints the formula in a DIMACS format.
  */
-void print_dimacs(list<map<size_t, bool>> clauses, size_t order) {
+void print_dimacs(list<map<size_t, bool>> clauses, size_t& order) {
     cout << "c" << endl;
     cout << "c DIMACS file to solve a Sudoku game with SAT" << endl;
     cout << "c" << endl;
@@ -89,7 +89,7 @@ void print_dimacs(list<map<size_t, bool>> clauses, size_t order) {
 /*
  * Prints the formula in a SUDOKU format.
  */
-void print_sudoku(map<size_t, bool> solution, size_t order) {
+void print_sudoku(map<size_t, bool> solution, size_t& order) {
     size_t dimension = order * order;
 
     cout << order << endl;

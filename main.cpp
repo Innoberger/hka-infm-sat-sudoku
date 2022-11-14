@@ -7,13 +7,12 @@
 
 list<map<size_t, bool>> sudoku_input_assignment_clauses;
 map<size_t, bool> sudoku_solution;
-size_t order;
 
 /*
  * Initializes the variable sudoku_input_assignment_clauses.
  */
-int init_field() {
-    int sudoku_order, dimension;
+int init_field(size_t& order) {
+    size_t dimension;
     list<string> lines;
 
     for (string line; getline(cin, line);)
@@ -24,19 +23,19 @@ int init_field() {
         return 1;
     }
 
-    sudoku_order = stoi(lines.front());
-    dimension = sudoku_order * sudoku_order;
+    order = stoi(lines.front());
+    dimension = order * order;
     lines.pop_front();
 
-    if (sudoku_order < 1) {
+    if (order < 1) {
         cout << "error reading from stdin: expected sudoku order in line 1 "
-             << "to be a positive integer, got " << sudoku_order << endl;
+             << "to be a positive integer, got " << order << endl;
         return 1;
     }
 
     if (lines.size() != dimension) {
         cout << "error reading from stdin: after order number line ("
-             << sudoku_order << "), there are order * order (" << dimension
+             << order << "), there are order * order (" << dimension
              << ") lines expected, got " << lines.size() << endl;
         return 1;
     }
@@ -76,7 +75,7 @@ int init_field() {
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
             for (size_t n = 1; n <= dimension; n++) {
-                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, sudoku_order), ((size_t) elem) == n }});
+                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, order), ((size_t) elem) == n }});
             }
 
             col_ctr++;
@@ -87,14 +86,14 @@ int init_field() {
         lines.pop_front();
     }
 
-    order = (size_t) sudoku_order;
+    order = (size_t) order;
     return 0;
 }
 
 /*
  * Loads the solution from any SAT solver that outputs DIMACS format in stdout.
  */
-int load_solution() {
+int load_solution(size_t& order) {
     list<string> lines;
 
     for (string line; getline(cin, line);)
@@ -158,7 +157,8 @@ int load_solution() {
  * Reads a .sudoku file format from stdin and output corresponding dimacs to stdout.
  */
 int program_generate_dimacs() {
-    int init = init_field();
+    size_t order;
+    int init = init_field(order);
 
     if (init != 0)
         return init;
@@ -189,7 +189,8 @@ int program_generate_dimacs() {
  * Reads a solved sat problem from stdin and reinterprets it as .sudoku file format, writing to stdout.
  */
 int program_interpret_solution() {
-    int load = load_solution();
+    size_t order;
+    int load = load_solution(order);
 
     if (load != 0)
         return load;

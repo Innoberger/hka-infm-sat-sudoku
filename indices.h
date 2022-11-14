@@ -9,7 +9,7 @@
 /*
  * Returns the indices for each field.
  */
-list<list<size_t>> field_indices(size_t order) {
+list<list<size_t>> field_indices(size_t& order) {
     list<list<size_t>> indices;
     size_t dimension = order * order;
 
@@ -32,7 +32,7 @@ list<list<size_t>> field_indices(size_t order) {
 /*
  * Returns the indices for each column.
  */
-list<list<size_t>> col_indices(size_t order) {
+list<list<size_t>> col_indices(size_t& order) {
     list<list<size_t>> indices;
     size_t dimension = order * order;
 
@@ -55,7 +55,7 @@ list<list<size_t>> col_indices(size_t order) {
 /*
  * Returns the indices for each row.
  */
-list<list<size_t>> row_indices(size_t order) {
+list<list<size_t>> row_indices(size_t& order) {
     list<list<size_t>> indices;
     size_t dimension = order * order;
 
@@ -77,7 +77,7 @@ list<list<size_t>> row_indices(size_t order) {
 /*
  * Returns the indices for each block.
  */
-list<list<size_t>> block_indices(size_t order) {
+list<list<size_t>> block_indices(size_t& order) {
     list<list<size_t>> indices;
     size_t dimension = order * order;
 
