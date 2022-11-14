@@ -89,7 +89,7 @@ void print_dimacs(list<map<size_t, bool>> clauses, size_t order) {
 /*
  * Prints the formula in a SUDOKU format.
  */
-int print_sudoku(map<size_t, bool> solution, size_t order) {
+void print_sudoku(map<size_t, bool> solution, size_t order) {
     size_t dimension = order * order;
 
     cout << order << endl;
@@ -109,6 +109,4 @@ int print_sudoku(map<size_t, bool> solution, size_t order) {
         }
         cout << endl;
     }
-
-    return 0;
 }
