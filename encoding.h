@@ -33,9 +33,9 @@ encoding decode(size_t encoded, size_t order) {
     size_t dimension = order * order;
     encoding enc{};
 
-    for (int i = 0; i < dimension; i++) {
-        for (int j = 0; j < dimension; j++) {
-            for (int k = 1; k <= dimension; k++) {
+    for (size_t i = 0; i < dimension; i++) {
+        for (size_t j = 0; j < dimension; j++) {
+            for (size_t k = 1; k <= dimension; k++) {
                 if (encode(k, i, j, order) != encoded)
                     continue;
 
