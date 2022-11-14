@@ -40,6 +40,12 @@ This will output something like this:
 
 ![Example Result](example.png)
 
+If you want to solve sudoku puzzles of high orders (e.g. 8, meaning 64x64 grid), it is better not to use a piped one-liner. I recommend to redirect stdout to a file and reading the file again in the next step:
+
+1. `cat file.sudoku | ./hka_infm_sat_sudoku -d > sudoku_formula.col`
+
+2. `cat sudoku_formula.col | cadical | ./hka_infm_sat_sudoku -d`
+
 ## License
 
 &copy; 2022 Fynn Arnold
