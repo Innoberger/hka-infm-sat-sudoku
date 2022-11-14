@@ -6,7 +6,6 @@
 #include "constraints.h"
 
 list<map<size_t, bool>> sudoku_input_assignment_clauses;
-map<size_t, bool> sudoku_solution;
 
 /*
  * Initializes the variable sudoku_input_assignment_clauses.
@@ -93,7 +92,7 @@ int init_field(size_t& order) {
 /*
  * Loads the solution from any SAT solver that outputs DIMACS format in stdout.
  */
-int load_solution(size_t& order) {
+int load_solution(size_t& order, map<size_t, bool>& solution) {
     list<string> lines;
 
     for (string line; getline(cin, line);)
@@ -137,18 +136,18 @@ int load_solution(size_t& order) {
                 break;
 
             if (literal < 0) {
-                sudoku_solution.insert({ (size_t) abs(literal), false });
+                solution.insert({ (size_t) abs(literal), false });
                 continue;
             }
 
-            sudoku_solution.insert({ (size_t) literal, true });
+            solution.insert({ (size_t) literal, true });
         }
 
         lne_ctr++;
         lines.pop_front();
     }
 
-    order = (size_t) round(pow(sudoku_solution.size(), (double) 1/6));
+    order = (size_t) round(pow(solution.size(), (double) 1/6));
     return 0;
 }
 
@@ -190,12 +189,13 @@ int program_generate_dimacs() {
  */
 int program_interpret_solution() {
     size_t order;
-    int load = load_solution(order);
+    map<size_t, bool> solution;
+    int load = load_solution(order, solution);
 
     if (load != 0)
         return load;
 
-    print_sudoku(sudoku_solution, order);
+    print_sudoku(solution, order);
     return 0;
 }
 
