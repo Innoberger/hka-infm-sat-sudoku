@@ -53,7 +53,7 @@ encoding decode(size_t encoded, size_t& order) {
 /*
  * Prints the formula in a human-readable format.
  */
-void print_formula(list<map<size_t, bool>> clauses, size_t& order) {
+void print_formula(list<map<size_t, bool>>& clauses, size_t& order) {
     for (auto const &clause: clauses) {
         cout << "{";
         for (auto const &literal: clause) {
@@ -67,7 +67,7 @@ void print_formula(list<map<size_t, bool>> clauses, size_t& order) {
 /*
  * Prints the formula in a DIMACS format.
  */
-void print_dimacs(list<map<size_t, bool>> clauses, size_t& order) {
+void print_dimacs(list<map<size_t, bool>>& clauses, size_t& order) {
     cout << "c" << endl;
     cout << "c DIMACS file to solve a Sudoku game with SAT" << endl;
     cout << "c" << endl;
