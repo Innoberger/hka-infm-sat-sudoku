@@ -39,3 +39,9 @@ The code might not be the most efficient. To measure the duration, you can just 
 This will output something like this:
 
 ![Example Result](example.png)
+
+## License
+
+&copy; 2022 Fynn Arnold
+
+Licensed under the [EUPL](LICENSE)

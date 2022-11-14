@@ -95,8 +95,8 @@ int print_sudoku(map<size_t, bool> solution, size_t order) {
     cout << order << endl;
 
     for (size_t row = 0; row < dimension; row++) {
-        for (unsigned col = 0; col < dimension; col++) {
-            for (unsigned num = 1; num <= dimension; num++) {
+        for (size_t col = 0; col < dimension; col++) {
+            for (size_t num = 1; num <= dimension; num++) {
                 size_t encoded = encode(num, col, row, order);
                 bool value = solution.at(encoded);
 
