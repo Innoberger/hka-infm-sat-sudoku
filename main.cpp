@@ -40,7 +40,7 @@ int init_field(size_t& order, cnf_formula& input_formula) {
     size_t lne_ctr = 0;
 
     while (!lines.empty()) {
-        list<string> columns = tokenize(lines.front(), ' ');
+        list<string> columns = utils::tokenize(lines.front(), ' ');
 
         if (columns.size() != dimension) {
             cout << "error reading from stdin: error in line "
@@ -72,7 +72,7 @@ int init_field(size_t& order, cnf_formula& input_formula) {
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
             for (size_t n = 1; n <= dimension; n++) {
-                input_formula.push_back( {{ encode(n, col_ctr, lne_ctr, order), ((size_t) elem) == n }});
+                input_formula.push_back( {{ encoding::encode(n, col_ctr, lne_ctr, order), ((size_t) elem) == n }});
             }
 
             col_ctr++;
@@ -104,7 +104,7 @@ int load_solution(size_t& order, var_assignment& solution) {
     size_t lne_ctr = 1;
 
     while (!lines.empty()) {
-        list<string> columns_list = tokenize(lines.front(), ' ');
+        list<string> columns_list = utils::tokenize(lines.front(), ' ');
         vector<string> columns_vector { begin(columns_list), end(columns_list) };
 
         if (columns_vector.at(0) == "s") {
@@ -161,22 +161,17 @@ int program_generate_dimacs() {
     if (init != 0)
         return init;
 
-    list<indices_set> fields = field_indices(order);
-    list<indices_set> cols = col_indices(order);
-    list<indices_set> rows = row_indices(order);
-    list<indices_set> blocks = block_indices(order);
+    list<indices_set> fields = indices::of_fields(order);
+    list<indices_set> cols = indices::of_columns(order);
+    list<indices_set> rows = indices::of_rows(order);
+    list<indices_set> blocks = indices::of_blocks(order);
 
-    formula.merge(at_least_one_constraints(fields));
-    formula.merge(at_least_one_constraints(cols));
-    formula.merge(at_least_one_constraints(rows));
-    formula.merge(at_least_one_constraints(blocks));
+    formula.merge(constraints::exactly_one(fields));
+    formula.merge(constraints::exactly_one(cols));
+    formula.merge(constraints::exactly_one(rows));
+    formula.merge(constraints::exactly_one(blocks));
 
-    formula.merge(at_most_one_constraints(fields));
-    formula.merge(at_most_one_constraints(cols));
-    formula.merge(at_most_one_constraints(rows));
-    formula.merge(at_most_one_constraints(blocks));
-
-    print_dimacs(formula, order);
+    encoding::print_dimacs(formula, order);
     return 0;
 }
 
@@ -192,7 +187,7 @@ int program_interpret_solution() {
     if (load != 0)
         return load;
 
-    print_sudoku(solution, order);
+    encoding::print_sudoku(solution, order);
     return 0;
 }
 
