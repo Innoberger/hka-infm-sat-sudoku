@@ -27,6 +27,7 @@ There are two program argument options:
 
 | Option                             | Description                                                              |
 |------------------------------------|--------------------------------------------------------------------------|
+| `-h` or<br/>`--help`               | Print a help page to stdout.                                             |
 | `-d` or<br/>`--generate-dimacs`    | Read a .sudoku file from stdin and print DIMACS format to stdout.        |
 | `-s` or<br/>`--interpret-solution` | Read solved DIMACS format from stdin and print .sudoku format to stdout. |
 
