@@ -186,9 +186,33 @@ int program_interpret_solution() {
     return 0;
 }
 
+/*
+ * On option '--help' / '-h'
+ * Prints the help page.
+ */
+int program_help() {
+    cout << "Sudoku SAT Solver Tool" << endl;
+    cout << "======================" << endl;
+    cout << endl;
+    cout << "For more information, please visit" << endl;
+    cout << "https://github.com/Innoberger/hka-infm-sat-sudoku" << endl;
+    cout << endl;
+    cout << "usage: ./hka_infm_sat_sudoku <option>" << endl;
+    cout << endl;
+    cout << "where '<option>' is one of the following common options:" << endl;
+    cout << endl;
+    cout << "-h, --help" << endl;
+    cout << "     print this help page" << endl;
+    cout << "-d, --generate-dimacs" << endl;
+    cout << "     read a .sudoku file from stdin and print DIMACS format to stdout" << endl;
+    cout << "-s, --interpret-solution" << endl;
+    cout << "     read solved DIMACS format from stdin and print .sudoku format to stdout" << endl;
+    return 0;
+}
+
 int main(int argc, char** argv) {
     if (argc != 2) {
-        cout << "error reading program options: expected exactly one option, got " << (argc - 1) << endl;
+        cout << "error reading program options: expected exactly one option, got " << (argc - 1) << "; consider --help" << endl;
         return 1;
     }
 
@@ -196,7 +220,9 @@ int main(int argc, char** argv) {
         return program_generate_dimacs();
     else if (strcmp(argv[1], "--interpret-solution") == 0 || strcmp(argv[1], "-s") == 0)
         return program_interpret_solution();
+    else if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)
+        return program_help();
 
-    cout << "error reading program options: unknown option '" << argv[1] << "'" << endl;
+    cout << "error reading program options: unknown option '" << argv[1] << "'" << "; consider --help" << endl;
     return 1;
 }
