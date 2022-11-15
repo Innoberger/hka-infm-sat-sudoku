@@ -8,7 +8,7 @@ namespace constraints {
     /*
      * Generates at ExactlyOne constraints.
      * This is basically a merge of AtLeastOne and AtMostOne Constraints,
-     * but for performance, this will be calculated in one funciton
+     * but for performance, this will be calculated in one function.
      */
     cnf_formula exactly_one(list<indices_set> indices) {
         cnf_formula constraints;
