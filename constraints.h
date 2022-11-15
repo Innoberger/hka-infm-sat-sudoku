@@ -10,7 +10,7 @@ namespace constraints {
      * This is basically a merge of AtLeastOne and AtMostOne Constraints,
      * but for performance, this will be calculated in one function.
      */
-    cnf_formula exactly_one(list<indices_set> indices) {
+    cnf_formula exactly_one_of(list<indices_set> indices) {
         cnf_formula constraints;
 
         while (!indices.empty()) {
@@ -35,7 +35,7 @@ namespace constraints {
     /*
      * Generates at AtLeastOne constraints.
      */
-    cnf_formula at_least_one(list<indices_set> indices) {
+    cnf_formula at_least_one_of(list<indices_set> indices) {
         cnf_formula constraints;
 
         while (!indices.empty()) {
@@ -57,7 +57,7 @@ namespace constraints {
     /*
      * Generates at AtMostOne constraints.
      */
-    cnf_formula at_most_one(list<indices_set> indices) {
+    cnf_formula at_most_one_of(list<indices_set> indices) {
         cnf_formula constraints;
 
         while (!indices.empty()) {

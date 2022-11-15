@@ -161,15 +161,10 @@ int program_generate_dimacs() {
     if (init != 0)
         return init;
 
-    list<indices_set> fields = indices::of_fields(order);
-    list<indices_set> cols = indices::of_columns(order);
-    list<indices_set> rows = indices::of_rows(order);
-    list<indices_set> blocks = indices::of_blocks(order);
-
-    formula.merge(constraints::exactly_one(fields));
-    formula.merge(constraints::exactly_one(cols));
-    formula.merge(constraints::exactly_one(rows));
-    formula.merge(constraints::exactly_one(blocks));
+    formula.merge(constraints::exactly_one_of(indices::of_fields(order)));
+    formula.merge(constraints::exactly_one_of(indices::of_columns(order)));
+    formula.merge(constraints::exactly_one_of(indices::of_rows(order)));
+    formula.merge(constraints::exactly_one_of(indices::of_blocks(order)));
 
     encoding::print_dimacs(formula, order);
     return 0;
