@@ -6,9 +6,9 @@
 #include "constraints.h"
 
 /*
- * Initializes the variable sudoku_input_assignment_clauses.
+ * Initializes the variable input_formula.
  */
-int init_field(size_t& order, list<map<size_t, bool>>& sudoku_input_assignment_clauses) {
+int init_field(size_t& order, cnf_formula& input_formula) {
     size_t dimension;
     list<string> lines;
 
@@ -72,7 +72,7 @@ int init_field(size_t& order, list<map<size_t, bool>>& sudoku_input_assignment_c
             // set the all (column, row) variables for that number to false,
             // except for the number that was read from input (is true by definition)
             for (size_t n = 1; n <= dimension; n++) {
-                sudoku_input_assignment_clauses.push_back( {{ encode(n, col_ctr, lne_ctr, order), ((size_t) elem) == n }});
+                input_formula.push_back( {{ encode(n, col_ctr, lne_ctr, order), ((size_t) elem) == n }});
             }
 
             col_ctr++;
@@ -90,7 +90,7 @@ int init_field(size_t& order, list<map<size_t, bool>>& sudoku_input_assignment_c
 /*
  * Loads the solution from any SAT solver that outputs DIMACS format in stdout.
  */
-int load_solution(size_t& order, map<size_t, bool>& solution) {
+int load_solution(size_t& order, var_assignment& solution) {
     list<string> lines;
 
     for (string line; getline(cin, line);)
@@ -155,28 +155,28 @@ int load_solution(size_t& order, map<size_t, bool>& solution) {
  */
 int program_generate_dimacs() {
     size_t order;
-    list<map<size_t, bool>> clauses;
-    int init = init_field(order, clauses);
+    cnf_formula formula;
+    int init = init_field(order, formula);
 
     if (init != 0)
         return init;
 
-    list<list<size_t>> fields = field_indices(order);
-    list<list<size_t>> cols = col_indices(order);
-    list<list<size_t>> rows = row_indices(order);
-    list<list<size_t>> blocks = block_indices(order);
+    list<indices_set> fields = field_indices(order);
+    list<indices_set> cols = col_indices(order);
+    list<indices_set> rows = row_indices(order);
+    list<indices_set> blocks = block_indices(order);
 
-    clauses.merge(at_least_one_constraints(fields));
-    clauses.merge(at_least_one_constraints(cols));
-    clauses.merge(at_least_one_constraints(rows));
-    clauses.merge(at_least_one_constraints(blocks));
+    formula.merge(at_least_one_constraints(fields));
+    formula.merge(at_least_one_constraints(cols));
+    formula.merge(at_least_one_constraints(rows));
+    formula.merge(at_least_one_constraints(blocks));
 
-    clauses.merge(at_most_one_constraints(fields));
-    clauses.merge(at_most_one_constraints(cols));
-    clauses.merge(at_most_one_constraints(rows));
-    clauses.merge(at_most_one_constraints(blocks));
+    formula.merge(at_most_one_constraints(fields));
+    formula.merge(at_most_one_constraints(cols));
+    formula.merge(at_most_one_constraints(rows));
+    formula.merge(at_most_one_constraints(blocks));
 
-    print_dimacs(clauses, order);
+    print_dimacs(formula, order);
     return 0;
 }
 
@@ -186,7 +186,7 @@ int program_generate_dimacs() {
  */
 int program_interpret_solution() {
     size_t order;
-    map<size_t, bool> solution;
+    var_assignment solution;
     int load = load_solution(order, solution);
 
     if (load != 0)

@@ -7,11 +7,11 @@
 /*
  * Generates at AtLeastOne constraints.
  */
-list<map<size_t, bool>> at_least_one_constraints(list<list<size_t>> indices) {
-    list<map<size_t, bool>> constraints;
+cnf_formula at_least_one_constraints(list<indices_set> indices) {
+    cnf_formula constraints;
 
     while (!indices.empty()) {
-        list<size_t> elems = indices.back();
+        indices_set elems = indices.back();
         map<size_t, bool> at_least_one;
 
         while (!elems.empty()) {
@@ -29,8 +29,8 @@ list<map<size_t, bool>> at_least_one_constraints(list<list<size_t>> indices) {
 /*
  * Generates at AtMostOne constraints.
  */
-list<map<size_t, bool>> at_most_one_constraints(list<list<size_t>> indices) {
-    list<map<size_t, bool>> constraints;
+cnf_formula at_most_one_constraints(list<indices_set> indices) {
+    cnf_formula constraints;
 
     while (!indices.empty()) {
         vector<size_t> elems(indices.back().size());

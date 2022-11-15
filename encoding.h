@@ -7,6 +7,10 @@
 
 using namespace std;
 
+using var_assignment = map<size_t, bool>;
+using clauses = map<size_t, bool>;
+using cnf_formula = list<clauses>;
+
 struct encoding {
     size_t number, column, row;
 };
@@ -53,8 +57,8 @@ encoding decode(size_t encoded, size_t& order) {
 /*
  * Prints the formula in a human-readable format.
  */
-void print_formula(list<map<size_t, bool>>& clauses, size_t& order) {
-    for (auto const &clause: clauses) {
+void print_formula(cnf_formula& formula, size_t& order) {
+    for (auto const &clause: formula) {
         cout << "{";
         for (auto const &literal: clause) {
             encoding enc = decode(literal.first, order);
@@ -67,13 +71,13 @@ void print_formula(list<map<size_t, bool>>& clauses, size_t& order) {
 /*
  * Prints the formula in a DIMACS format.
  */
-void print_dimacs(list<map<size_t, bool>>& clauses, size_t& order) {
+void print_dimacs(cnf_formula& formula, size_t& order) {
     cout << "c" << endl;
     cout << "c DIMACS file to solve a Sudoku game with SAT" << endl;
     cout << "c" << endl;
-    cout << "p cnf " << (order * order * order * order * order * order) << " " << clauses.size() << endl;
+    cout << "p cnf " << (order * order * order * order * order * order) << " " << formula.size() << endl;
 
-    for (auto const &clause: clauses) {
+    for (auto const &clause: formula) {
         for (auto const &literal: clause) {
             int var = literal.first;
 
@@ -89,7 +93,7 @@ void print_dimacs(list<map<size_t, bool>>& clauses, size_t& order) {
 /*
  * Prints the formula in a SUDOKU format.
  */
-void print_sudoku(map<size_t, bool>& solution, size_t& order) {
+void print_sudoku(var_assignment& solution, size_t& order) {
     size_t dimension = order * order;
 
     cout << order << endl;
